@@ -1,0 +1,4 @@
+@import './cmps/app.css';
+body {
+    background-color: lightgray;
+}
