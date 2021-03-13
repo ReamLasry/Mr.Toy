@@ -10,8 +10,8 @@ const {log} = require('../../middlewares/logger.middleware');
 router.get('/',  getToys);
 router.get('/:id', getToy);
 router.put('/:id', updateToy);
+router.delete('/:id', requireAuth, requireAdmin, deleteToy)
 
 // router.put('/:id',  requireAuth, updateUser)
-router.delete('/:id', requireAuth, requireAdmin, deleteToy)
 
 module.exports = router

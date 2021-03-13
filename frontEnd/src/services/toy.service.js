@@ -19,8 +19,6 @@ const gToys = _createToys()
 function query() {
     // return axios.get(TOY_URL).then(({ data }) => data);
     return httpService.get('toy')
-
-
     // return storageService.query(KEY)
     //     .then(toys => {
     //         if (!toys || !toys.length) toys = gToys;
