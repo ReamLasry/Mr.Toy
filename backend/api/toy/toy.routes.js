@@ -13,6 +13,4 @@ router.get('/:id', getToy);
 router.put('/:id', updateToy);
 router.delete('/:id', deleteToy)
 
-// router.put('/:id',  requireAuth, updateUser)
-
 module.exports = router

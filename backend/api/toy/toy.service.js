@@ -1,10 +1,6 @@
-// const fs = require('fs');
-// const toys = require('../../data/toy.json');
 const dbService = require('../../services/db.service');
 const logger = require('../../services/logger.service');
 const ObjectId = require('mongodb').ObjectId;
-
-
 
 module.exports = {
     query,
@@ -14,20 +10,11 @@ module.exports = {
     add
 }
 
-// function query() {
-//     return Promise.resolve(toys);
-// }
 async function query(filterBy = {}) {
-    console.log('fdfdf')
     // const criteria = _buildCriteria(filterBy)
     try {
-        console.log('line 20')
         const collection = await dbService.getCollection('toy');
-        console.log('collection: ', collection);
         const toys = await collection.find().toArray();
-        // const toys = await collection.find(criteria).toArray();
-        console.log(toys)
-        console.log('toys')
         return toys;
     } catch (err) {
         logger.error('cannot find toys', err);
@@ -35,11 +22,6 @@ async function query(filterBy = {}) {
     }
 }
 
-
-// function getById(toyId) {
-//     const toy = toys.find(toy => toy._id === toyId);
-//     return Promise.resolve(toy);
-// }
 async function getById(toyId) {
     try {
         const collection = await dbService.getCollection('toy');
@@ -51,18 +33,10 @@ async function getById(toyId) {
     }
 }
 
-// function remove(toyId, nickname) {
-//     // if (toyId.typeof === "number") toyId = JSON.parse(toyId);
-//     const idx = toys.findIndex(toy => toy._id === toyId);
-//     toys.splice(idx, 1);
-//     return _saveToysToFile();
-// }
 async function remove(toyId, nickname) {
     if (toyId.typeof === "number") toyId = JSON.parse(toyId);
     try {
         const collection = await dbService.getCollection('toy');
-        // const idx = collection.findIndex(toy => toy._id === toyId);
-        // if (collection[idx].creator !== nickname) return Promise.reject('User not allowed to delete this toy')
         await collection.deleteOne({ '_id': ObjectId(toyId) });
     } catch (err) {
         logger.error(`cannot remove toy ${toyId}`, err);
@@ -70,17 +44,6 @@ async function remove(toyId, nickname) {
     }
 }
 
-// function save(toy) {
-//     if (toy._id) {
-//         const idx = toys.findIndex(t => t._id === toy._id);
-//         toys.splice(idx, 1, toy);
-//     } else {
-//         toy._id = _makeId();
-//         toys.unshift(toy);
-//     }
-//     return _saveToysToFile()
-//         .then(() => toy);
-// }
 async function save(toy) {
     try {
         // peek only updatable fields!
@@ -128,7 +91,6 @@ function _makeId(length = 5) {
     }
     return txt
 }
-
 function _buildCriteria(filterBy) {
     const criteria = {}
     if (filterBy.txt) {
@@ -147,15 +109,3 @@ function _buildCriteria(filterBy) {
     }
     return criteria
 }
-
-// function _buildCriteria(filterBy) {
-//     const criteria = {}
-//     if (filterBy.name) {
-//         const txtCriteria = { $regex: filterBy.name, $options: 'i' }
-//         criteria.name =txtCriteria 
-//     }
-//     if (filterBy.type !== 'all') {
-//         criteria.type = filterBy.type
-//     }
-//     if(filterBy.inStock ==='true'){
-//         criteria.inStock = true

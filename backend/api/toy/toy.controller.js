@@ -1,9 +1,5 @@
-// const express = require('express');
 const toyService = require('./toy.service');
-const logger = require('../../services/logger.service')
-
-// const router = express.Router();
-// module.exports = router;
+const logger = require('../../services/logger.service');
 
 module.exports = {
     getToys,
@@ -16,11 +12,6 @@ module.exports = {
 //LIST OF Toys  
 async function getToys(req, res) {
     try {
-        // const filterBy = {
-        //     txt: req.query?.txt || '',
-        //     minBalance: +req.query?.minBalance || 0
-        // }
-        console.log('i am here ine 26');
         const toys = await toyService.query()
         res.send(toys)
     } catch (err) {
@@ -60,8 +51,9 @@ async function addToy(req, res) {
 // UPDATE TOY
 async function updateToy(req, res) {
     try {
-        const savedToy = await toyService.save(toy)
-        res.send(savedToy)
+        const toy = req.body;
+        const savedToy = await toyService.save(toy);
+        res.send(savedToy);
     } catch (err) {
         logger.error('Failed to update toy', err)
         res.status(500).send({ err: 'Failed to update toy' })
@@ -69,7 +61,6 @@ async function updateToy(req, res) {
 }
 
 // REMOVE A TOY
-
 async function deleteToy(req, res) {
     try {
         await toyService.remove(req.params.id)

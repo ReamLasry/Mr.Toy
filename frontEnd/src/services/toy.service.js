@@ -14,42 +14,24 @@ export const toyService = {
     getEmptyToy
 }
 
-const gToys = _createToys()
+// const gToys = _createToys()
 
 function query() {
-    // return axios.get(TOY_URL).then(({ data }) => data);
-    return httpService.get('toy')
-    // return storageService.query(KEY)
-    //     .then(toys => {
-    //         if (!toys || !toys.length) toys = gToys;
-    //         return toys
-    //     })
+    return httpService.get('toy');
 }
 
 function getById(id) {
-    return axios.get(TOY_URL + id).then(res => res.data);
-    // return storageService.get(KEY, id)
+    return httpService.get(`toy/${id}`)
 }
 
 function remove(id) {
-    return axios.delete(TOY_URL + id)
-        .then(res => res.data)
-        .catch(err => { throw new Error(err) });
-    // return storageService.remove(KEY, id)
+    return httpService.delete(`toy/${id}`)
 }
-
-// function save(toy) {
-// if (toy._id) return axios.put(TOY_URL + toy._id, toy).then(res => res.data);
-// else return axios.post(TOY_URL, toy).then(res => res.data);
-// const savedToy = (toy._id) ? storageService.put(KEY, toy) : storageService.post(KEY, toy)
-// return savedToy;
-// }
 
 function save(toy) {
     if (toy._id) return httpService.put(`toy/${toy._id}`, toy);
     else return httpService.post('toy', toy);
 }
-
 
 function getEmptyToy(name = '', price = 0, inStock = true) {
     return {
