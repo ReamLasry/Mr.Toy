@@ -1,6 +1,7 @@
 // const fs = require('fs');
 // const toys = require('../../data/toy.json');
 const dbService = require('../../services/db.service');
+const logger = require('../../services/logger.service')
 
 
 module.exports = {
@@ -14,10 +15,16 @@ module.exports = {
 //     return Promise.resolve(toys);
 // }
 async function query(filterBy = {}) {
-    const criteria = _buildCriteria(filterBy)
+    console.log('fdfdf')
+    // const criteria = _buildCriteria(filterBy)
     try {
-        const collection = await dbService.getCollection('user');
-        const toys = await collection.find(criteria).toArray();
+        console.log('line 20')
+        const collection = await dbService.getCollection('toy');
+        console.log('collection: ',collection);
+        const toys = await collection.find().toArray();
+        // const toys = await collection.find(criteria).toArray();
+        console.log(toys)
+        console.log('toys')
         return toys;
     } catch (err) {
         logger.error('cannot find toys', err);
@@ -107,3 +114,34 @@ function _makeId(length = 5) {
     }
     return txt
 }
+
+function _buildCriteria(filterBy) {
+    const criteria = {}
+    if (filterBy.txt) {
+        const txtCriteria = { $regex: filterBy.txt, $options: 'i' }
+        criteria.$or = [
+            {
+                username: txtCriteria
+            },
+            {
+                fullname: txtCriteria
+            }
+        ]
+    }
+    if (filterBy.minBalance) {
+        criteria.balance = { $gte: filterBy.minBalance }
+    }
+    return criteria
+}
+
+// function _buildCriteria(filterBy) {
+//     const criteria = {}
+//     if (filterBy.name) {
+//         const txtCriteria = { $regex: filterBy.name, $options: 'i' }
+//         criteria.name =txtCriteria 
+//     }
+//     if (filterBy.type !== 'all') {
+//         criteria.type = filterBy.type
+//     }
+//     if(filterBy.inStock ==='true'){
+//         criteria.inStock = true

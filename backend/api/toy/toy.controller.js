@@ -1,5 +1,6 @@
 // const express = require('express');
 const toyService = require('./toy.service');
+const logger = require('../../services/logger.service')
 
 // const router = express.Router();
 // module.exports = router;
@@ -18,14 +19,15 @@ module.exports = {
 // })
 async function getToys(req, res) {
     try {
-        const filterBy = {
-            txt: req.query?.txt || '',
-            minBalance: +req.query?.minBalance || 0
-        }
-        const toys = await toyService.query(filterBy)
+        // const filterBy = {
+        //     txt: req.query?.txt || '',
+        //     minBalance: +req.query?.minBalance || 0
+        // }
+        console.log('i am here ine 26');
+        const toys = await toyService.query()
         res.send(toys)
     } catch (err) {
-        logger.error('Failed to get toy', err)
+        logger.error('Failed to get toys', err)
         res.status(500).send({ err: 'Failed to get toy' })
     }
 }
