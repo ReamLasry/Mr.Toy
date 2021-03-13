@@ -9,14 +9,11 @@ module.exports = {
     getToys,
     getToy,
     deleteToy,
-    updateToy
+    updateToy,
+    addToy
 }
 
 //LIST OF Toys  
-// router.get('/', (req, res) => {
-//     toyService.query()
-//         .then(toys => res.json(toys));
-// })
 async function getToys(req, res) {
     try {
         // const filterBy = {
@@ -33,11 +30,6 @@ async function getToys(req, res) {
 }
 
 // GET SINGLE TOY
-// router.get('/:toyId', (req, res) => {
-//     const { toyId } = req.params;
-//     toyService.getById(toyId)
-//         .then(toy => res.json(toy));
-// })
 async function getToy(req, res) {
     try {
         const toy = await toyService.getById(req.params.id)
@@ -49,38 +41,25 @@ async function getToy(req, res) {
 }
 
 // ADD NEW TOY
-// router.post('/', (req, res) => {
-//     // const { theUser } = req.session;
-//     // if (!theUser) return res.status(401).send('User needs to login...');
+async function addToy(req, res) {
+    try {
+        const { name, price, type, inStock } = req.body;
+        const newToy = { name, price, type, inStock };
+        console.log('i am newToy: ', newToy);
+        const savedToy = await toyService.add(newToy)
+        res.json(savedToy)
+    }
+    catch (err) {
+        logger.error('Cannot add toy ', err)
+        res.status(500).send({
+            err: 'Failed to add toy'
+        })
+    }
+}
 
-//     // const { name, price, tpye, inStock } = req.body;
-
-//     const toy = req.body;
-//     toy.createdAt = Date.now();
-//     // const toy = { ...req.body, createdAt: Date.now() };
-
-//     toyService.save(toy)
-//         .then(savedToy => res.json(savedToy));
-// })
 // UPDATE TOY
-// router.put('/:toyId', (req, res) => {
-//     // const { theUser } = req.session;
-//     // if (!theUser) return res.status(401).send('User needs to login...');
-
-//     // const owner = { _id: theUser._id, fullname: theUser.fullname };
-//     // const { _id, name, price, type, createdAt, inStock } = req.body;
-
-//     // const toy = { _id, name, price, type, createdAt, inStock };
-//     // const toy = {...req.body, owner};
-//     const toy = req.body;
-
-//     // toyService.save(toy, theUser._id)
-//     toyService.save(toy)
-//         .then(savedToy => res.json(savedToy));
-// })
 async function updateToy(req, res) {
     try {
-        const toy = req.body
         const savedToy = await toyService.save(toy)
         res.send(savedToy)
     } catch (err) {
@@ -90,15 +69,7 @@ async function updateToy(req, res) {
 }
 
 // REMOVE A TOY
-// router.delete('/:toyId', (req, res) => {
-//     // const { theUser } = req.session;
-//     // if (!theUser) return res.status(401).send('User needs to login...');
 
-//     const { toyId } = req.params;
-//     // toyService.remove(toyId, nickName)
-//     toyService.remove(toyId)
-//         .then(() => res.json('Deleted...'));
-// })
 async function deleteToy(req, res) {
     try {
         await toyService.remove(req.params.id)

@@ -1,14 +1,17 @@
 // const fs = require('fs');
 // const toys = require('../../data/toy.json');
 const dbService = require('../../services/db.service');
-const logger = require('../../services/logger.service')
+const logger = require('../../services/logger.service');
+const ObjectId = require('mongodb').ObjectId;
+
 
 
 module.exports = {
     query,
     getById,
     remove,
-    save
+    save,
+    add
 }
 
 // function query() {
@@ -20,7 +23,7 @@ async function query(filterBy = {}) {
     try {
         console.log('line 20')
         const collection = await dbService.getCollection('toy');
-        console.log('collection: ',collection);
+        console.log('collection: ', collection);
         const toys = await collection.find().toArray();
         // const toys = await collection.find(criteria).toArray();
         console.log(toys)
@@ -58,8 +61,8 @@ async function remove(toyId, nickname) {
     if (toyId.typeof === "number") toyId = JSON.parse(toyId);
     try {
         const collection = await dbService.getCollection('toy');
-        const idx = collection.findIndex(toy => toy._id === toyId);
-        if (collection[idx].creator !== nickname) return Promise.reject('User not allowed to delete this toy')
+        // const idx = collection.findIndex(toy => toy._id === toyId);
+        // if (collection[idx].creator !== nickname) return Promise.reject('User not allowed to delete this toy')
         await collection.deleteOne({ '_id': ObjectId(toyId) });
     } catch (err) {
         logger.error(`cannot remove toy ${toyId}`, err);
@@ -93,6 +96,17 @@ async function save(toy) {
         return toyToSave;
     } catch (err) {
         logger.error(`cannot update =toy ${toy._id}`, err);
+        throw err;
+    }
+}
+
+async function add(toy) {
+    try {
+        const collection = await dbService.getCollection('toy');
+        await collection.insertOne(toy);
+        return toy;
+    } catch (err) {
+        logger.error('Can not add new toy');
         throw err;
     }
 }
